@@ -5,7 +5,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Microsoft.Win32;
@@ -79,6 +78,7 @@ namespace PictureRandomiser
             {
                 _forceStop = true;
             }
+
             _totalNumbersOnGeneration = 0;
             PicturesGrid.Children.Clear();
             GenerateButton.IsEnabled = true;
@@ -90,6 +90,7 @@ namespace PictureRandomiser
             {
                 _forceStop = false;
             }
+
             if (_totalNumbersOnGeneration == GameSettings.CountOfPicturesDisplay)
             {
                 if (MessageBox.Show("Results are full. Do you want to clean it and start again?", "Attantion",
@@ -101,12 +102,13 @@ namespace PictureRandomiser
                 else
                     return;
             }
+
             _totalNumbersOnGeneration++;
             var delayInSeconds = GameSettings.DelayInSeconds;
             if (GameSettings.DisableButtonWhileGeneration)
                 GenerateButton.IsEnabled = false;
             var picturesCount = Pictures.Count;
-            var countOfSteps = GetCountOfSteps(delayInSeconds*1000);
+            var countOfSteps = GetCountOfSteps(delayInSeconds * 1000);
             Task.Factory.StartNew(() =>
             {
                 if (delayInSeconds > 0)
@@ -128,8 +130,13 @@ namespace PictureRandomiser
                 {
                     if (_forceStop)
                         return;
-                    _generatedIds.Add(CurrentId.Value);
-                    PicturesGrid.Children.Add(new System.Windows.Controls.Image {Source = Pictures[CurrentId.Value].Image});
+                    if (CurrentId != null)
+                    {
+                        _generatedIds.Add(CurrentId.Value);
+                        PicturesGrid.Children.Add(
+                            new System.Windows.Controls.Image {Source = Pictures[CurrentId.Value].Image});
+                    }
+
                     if (GameSettings.NonStop && !_forceStop)
                         Dispatcher.Invoke(() => GenerateNumberButtonClick(null, null));
                     else
@@ -143,11 +150,12 @@ namespace PictureRandomiser
             if (delayInMillisec < 0)
                 return 0;
             int countOfSteps = 0;
-            while (restPercent>0)
+            while (restPercent > 0)
             {
-                restPercent = restPercent - (double)GetDelayMilliseconds(1-restPercent)/delayInMillisec;
+                restPercent = restPercent - (double) GetDelayMilliseconds(1 - restPercent) / delayInMillisec;
                 countOfSteps++;
             }
+
             return countOfSteps;
         }
 
@@ -164,9 +172,7 @@ namespace PictureRandomiser
         {
             var number = _random.Next(0, count);
             while (_generatedIds.Contains(number))
-            {
                 number = _random.Next(0, count);
-            }
             return number;
         }
 
@@ -197,7 +203,7 @@ namespace PictureRandomiser
                         {
                             Id = i
                         };
-                        BitmapImage image = new BitmapImage();
+                        var image = new BitmapImage();
                         image.BeginInit();
                         image.CacheOption = BitmapCacheOption.OnLoad;
                         image.UriSource = new Uri(x);

@@ -1,6 +1,4 @@
 ﻿using System.Windows;
-using MahApps.Metro.Controls;
-using PictureRandomiser;
 
 namespace PictureRandomiser
 {

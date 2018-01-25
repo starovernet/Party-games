@@ -169,9 +169,6 @@
     <Resource Include="FodyWeavers.xml" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resource\2c2p.png" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\Utilities\Utilities.csproj">
       <Project>{67b3b020-fd89-4879-950a-f6a9c752279f}</Project>
       <Name>Utilities</Name>
